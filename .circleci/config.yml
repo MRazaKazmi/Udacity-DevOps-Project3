@@ -280,7 +280,7 @@ jobs:
             
       
             
-            echo "API_URL=${API_URL}" >> .env
+            echo API_URL="${API_URL}" >> .env
             echo "${API_URL}"
             cat .env
       - run:
