@@ -220,8 +220,10 @@ jobs:
           no_output_timeout: 20m
           working_directory: ./backend
           command: |
-            npm i
+            npm install
+            npm audit fix --force
             sudo npm install pm2 -g
+            touch .env
             echo ENVIRONMENT=production > ".env"
             echo TYPEORM_CONNECTION=postgres >> ".env"
             echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ".env"
