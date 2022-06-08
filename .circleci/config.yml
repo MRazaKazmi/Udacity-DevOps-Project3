@@ -220,11 +220,7 @@ jobs:
           command: |
             cd backend
             npm install
-            npm install typescript
-            npm --update install python3 npm
-            npm audit fix --force
-            sudo npm install pm2 -g
-            npm run build
+            touch .env
             echo ENVIRONMENT=production > ".env"
             echo TYPEORM_CONNECTION=postgres >> ".env"
             echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ".env"
