@@ -217,13 +217,14 @@ jobs:
 
       - run:
           name: Run migrations
-          no_output_timeout: 20m
-          working_directory: ./backend
           command: |
+            cd backend
             npm install
+            npm install typescript
+            npm --update install python3 npm
             npm audit fix --force
             sudo npm install pm2 -g
-            touch .env
+            npm run build
             echo ENVIRONMENT=production > ".env"
             echo TYPEORM_CONNECTION=postgres >> ".env"
             echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> ".env"
