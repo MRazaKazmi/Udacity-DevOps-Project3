@@ -298,40 +298,7 @@ jobs:
       - revert-migrations
       - destroy-environment   
                          
-  deploy-backend:
-    docker:
-      - image: python:3.7-alpine3.11
-    steps:
-      - checkout
-      - add_ssh_keys:
-          fingerprints: ["b1:ba:f3:a1:cc:89:eb:9a:8c:b1:96:a7:59:fa:a4:75"]
-      - attach_workspace:
-          at: ~/
-      - attach_workspace:
-          at: /tmp/workspace
-      - restore_cache:
-          key: backend-build
-      - run:
-          name: Install dependencies
-          command: |
-            apk add --update ansible openssh-client tar gzip curl nodejs npm
-            pip install awscli
-      - run:
-          name: Deploy backend
-          no_output_timeout: 20m
-          command: |
-            cd backend
-            npm i
-            npm run build
-            cd ..
-            tar -C backend -czvf artifact.tar.gz .
-            cd .circleci/ansible
-            echo "Contents  of the inventory.txt file is -------"
-            cat inventory.txt
-            export ANSIBLE_HOST_KEY_CHECKING=False
-            ansible-playbook -i inventory.txt deploy-backend.yml
-      - revert-migrations
-      - destroy-environment 
+  
 
     deploy-backend:
       docker:
@@ -388,6 +355,8 @@ jobs:
                 --filters Name=tag:Name,Values="backend-${CIRCLE_WORKFLOW_ID:0:7}" \
                 --query 'Reservations[*].Instances[*].PublicIpAddress' \
                 --output text >> .circleci/ansible//inventory.txt
+              export ANSIBLE_HOST_KEY_CHECKING=False
+ 
               ansible-playbook -i .circleci/ansible/inventory.txt .circleci/ansible/deploy-backend.yml
         - save_cache:
             paths: [backend/node_modules]
